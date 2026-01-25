@@ -1,0 +1,94 @@
+\begin{homeworkProblem}[Counting Steps Efficiently]
+    \begin{itemize}
+        \item[(a)] Analyze the running time of your algorithm from the previous 
+            question. Is it bounded by a polynomial in $n$? Assume for 
+            simplicity that two integers can be added in one timestep.
+
+        \item[(b)] Give an efficient algorithm to compute the answer, and show 
+            the running time is bounded by $O(n)$ (polynomial in $n$ is also 
+            acceptable). 
+
+        \item[(c)] (Extra credit) Give an even more efficient algorithm to 
+            compute the answer, and analyze its running time, which should be 
+            sub-polynomial, again assuming each integer arithmetic operation 
+            takes $1$ step. {\it Hint: can you compute the answer by 
+            multiplying $2\times 2$ matrices?}
+
+            Is this running time a fair assessment of how the algorithm will 
+            perform in practice?
+
+    \end{itemize}
+
+    \begin{homeworkAnswer}[\solution]
+        \begin{itemize}
+            \item[(a)] The recurrence equation for the algorithm is $T(n) = 
+                T(n - 1) + T(n - 2) + O(n)$. No it is not bounded in polynomial
+                time because the tree grows approximately exponentially in size
+                with each increase in $n$.
+
+            \item[(b)] Below is an efficient algorithm to compute the answer.
+                {\color{blue}
+                \begin{algorithmic}[1]
+                    \Function{Steps}{$n$}
+                        \State{$\text{rungs}[0] \gets 1$}
+                        \State{$\text{rungs}[1] \gets 1$}
+                        \For{$i \gets 2$ \textbf{to} $n$}
+                            \State{$\text{rungs}[i] \gets \text{rungs}[i - 1] + \text{rungs}[i - 2]$}
+                        \EndFor{}
+                        \State{}\Return{$\text{rungs}[n]$}
+                    \EndFunction{}
+                \end{algorithmic}}
+
+                
+                Let $C(n)$ denote the number of iterations of the for-loop in 
+                $\mathrm{Steps}(n)$. For $n \le 1$, the loop does not execute, 
+                so $C(n) = 0$. For $n \ge 2$, the loop runs for $i = 2, 3, 
+                \dots, n$, hence $C(n) = n - 1$. Each iteration performs one 
+                addition and a 
+                constant number of assignments, so costs $O(1)$ time. The 
+                initialization of $\text{rungs}[0]$ and $\text{rungs}[1]$ also 
+                costs $O(1)$. Therefore, the total running time is $O(1) + C(n) 
+                \cdot O(1) = O(n)$. The space usage is $O(n)$ to store 
+                $\text{rungs}[0..n]$.
+            
+            \item[(c)] Below is an even more efficient algorithm to compute the
+                answer:
+
+                {\color{blue}
+                \begin{algorithmic}[1]
+                    \Function{Steps}{$n$}
+                        \State{$A \gets \left[\begin{array}{cc}1 & 1\\ 1 & 0\end{array}\right]$}
+                        \State{$A \gets \Call{MatrixPower}{A,\; n + 2}$}
+                        \State{}\Return{$A[1,1]$}
+                    \EndFunction{}
+                \end{algorithmic}}
+
+                The above algorithm produces the correct answer on an arbitrary 
+                input of $n \geq 1$. The function leverages matrix 
+                multiplication of a $2 \times 2$ matrix, $A$, by computing 
+                $A^{n + 2}$ and returning the bottom-right entry of the result.
+                This works because $A$ encodes the base cases of the function
+                and computes an update in multiplication
+
+                \[
+                    \left[\begin{array}{cc}
+                        \textsc{Steps}(n + 1) & \textsc{Steps}(n) \\
+                        \textsc{Steps}(n)     & \textsc{Steps}(n - 1)
+                    \end{array}\right] \times
+                    \left[\begin{array}{cc}
+                        1 & 1 \\
+                        1 & 0
+                    \end{array}\right] =
+                    \left[\begin{array}{cc}
+                        \textsc{Steps}(n + 2) & \textsc{Steps}(n + 1) \\
+                        \textsc{Steps}(n + 1) & \textsc{Steps}(n)
+                    \end{array}\right]
+                \]
+
+                and on an arbitrary input of $n \geq 1$, computing $A^{n + 2}$
+                will result in a $2 \times 2$ matrix with $\textsc{Steps}(n)$
+                in its bottom-right corner, which is returned. 
+                
+        \end{itemize}
+    \end{homeworkAnswer}
+\end{homeworkProblem}
