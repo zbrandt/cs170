@@ -4,53 +4,54 @@
     
     \begin{itemize}
         \item[(a)] Give a simple recursive algorithm to compute the answer.
-
         \item[(b)] Prove correctness using induction.
-
     \end{itemize}
+
+    \begin{homeworkAnswer}[\solution]
+        \begin{itemize}
+            \item[(a)] Below is a simple recursive algorithm to compute the 
+                answer.
+                
+                {\color{blue}
+                \begin{algorithmic}[1]
+                    \Function{Steps}{$n$}
+                        \If{$n = 0$}
+                            \State{} \Return{$1$}
+                        \ElsIf{$n < 0$}
+                            \State{} \Return{$0$}
+                        \Else{}
+                            \State{} \Return{$\Call{Steps}{n - 1} + \Call{Steps}{n - 2}$}
+                        \EndIf{}
+                    \EndFunction{}
+                \end{algorithmic}}
+
+            \item[(b)] \begin{proof}
+                I'll prove by induction on $n$ that the algorithm correctly 
+                computes how many distinct ways there are to climb a ladder
+                with $n$ rungs by climbing either 1 rung or 2 rungs in each
+                step.
+
+                \textbf{Base case:} If $n = 0$, there is 1 way to climb
+                the ladder, i.e., do nothing, and \textsc{Steps}$(0)$ 
+                returns 1.
+                
+                \textbf{Base case:} If $n < 0$, there are 0 ways to climb the
+                ladder, and \textsc{Steps}$(0)$ returns 0.
+
+                \textbf{Inductive hypothesis:} Assume that for all $0 \leq m \leq 
+                k$, \textsc{Steps}$(m)$ outputs the correct result.
+
+                \textbf{Inductive step:} For $n = k + 1$, the algorithm returns 
+                $\textsc{Steps}(k) + \textsc{Steps}( k- 1)$. By the inductive 
+                hypothesis, $\textsc{Steps}(k)$ correctly counts ways to reach 
+                rung $k$, from which it is possible to take 1 more step, and 
+                $\textsc{Steps}(k - 1)$ correctly counts ways to reach rung 
+                $k - 1$, from which we it is possible to take 2 more steps. 
+                Their sum then counts all distinct ways there are to reach rung 
+                $k + 1$, i.e., the top, by climbing either 1 rung or 2 rungs 
+                in each step. \end{proof}
+        \end{itemize}
+    
+    \end{homeworkAnswer}
 
 \end{homeworkProblem}
-
-\begin{homeworkAnswer}[\solution]
-    \begin{itemize}
-        \item[(a)] Below is a simple recurisve algorithm to compute the answer.
-            {\color{blue}
-            \begin{algorithmic}[1]
-                \Function{Steps}{$n$}
-                    \If{$n = 0$}
-                        \State{} \Return{$1$}
-                    \ElsIf{$n < 0$}
-                        \State{} \Return{$0$}
-                    \Else{}
-                        \State{} \Return{$\Call{Steps}{n - 1} + \Call{Steps}{n - 2}$}
-                    \EndIf{}
-                \EndFunction{}
-            \end{algorithmic}}
-
-        \item[(b)] \begin{proof}
-            We prove by induction on $n$ that the algorithm correctly computes 
-            the number of distinct ways to climb $n$ rungs.
-
-            \textbf{Base cases:}
-            \begin{itemize}
-                \item When $n = 0$: There is exactly 1 way to climb 0 rungs (do 
-                    nothing), and \textsc{Steps}$(0)$ returns 1. \checkmark
-                \item When $n < 0$: There are 0 ways to climb a negative number 
-                    of rungs, and \textsc{Steps}$(n)$ returns 0. \checkmark
-            \end{itemize}
-
-            \textbf{Inductive hypothesis:} Assume that for all $0 \leq m \leq 
-            k$, \textsc{Steps}$(m)$ correctly computes the number of ways to 
-            climb $m$ rungs.
-
-            \textbf{Inductive step:} For $n = k + 1$, the algorithm returns 
-            $\textsc{Steps}(k) + \textsc{Steps}(k-1)$. By the inductive 
-            hypothesis, $\textsc{Steps}(k)$ correctly counts ways to reach rung 
-            $k$ (from which we take 1 more step), and $\textsc{Steps}(k-1)$ 
-            correctly counts ways to reach rung $k-1$ (from which we take 2 
-            more steps). Their sum counts all distinct ways to reach rung 
-            $k+1$. \end{proof}
-
-    \end{itemize}
-
-\end{homeworkAnswer}
