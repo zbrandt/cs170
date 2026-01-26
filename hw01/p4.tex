@@ -1,57 +1,76 @@
 \begin{homeworkProblem}[Counting Steps (Solo Question)]
     You can climb a ladder with $n$ rungs by climbing either 1 rung or 2 rungs 
     in each step. How many distinct ways are there to climb to the top?
-    
-    \begin{itemize}
-        \item[(a)] Give a simple recursive algorithm to compute the answer.
-        \item[(b)] Prove correctness using induction.
-    \end{itemize}
+    \\
+
+    \part
+
+    Give a simple recursive algorithm to compute the answer.
+    \\
 
     \begin{homeworkAnswer}[\solution]
-        \begin{itemize}
-            \item[(a)] Below is a simple recursive algorithm to compute the 
-                answer.
-                
-                {\color{blue}
-                \begin{algorithmic}[1]
-                    \Function{Steps}{$n$}
-                        \If{$n = 0$}
-                            \State{} \Return{$1$}
-                        \ElsIf{$n < 0$}
-                            \State{} \Return{$0$}
-                        \Else{}
-                            \State{} \Return{$\Call{Steps}{n - 1} + \Call{Steps}{n - 2}$}
-                        \EndIf{}
-                    \EndFunction{}
-                \end{algorithmic}}
 
-            \item[(b)] \begin{proof}
-                I'll prove by induction on $n$ that the algorithm correctly 
-                computes how many distinct ways there are to climb a ladder
-                with $n$ rungs by climbing either 1 rung or 2 rungs in each
-                step.
+        Below is a simple recursive algorithm, \alg{Ways($n$)}, to compute how
+        many distinct ways there are to climb to the top of a ladder with $n$
+        rungs by climbing either 1 rung or 2 rungs in each step:
+        
+        \smallskip
+        
+        \begin{algorithmic}[1]
+            \Function{Ways}{$n$}
+                \If{$n = 0$}
+                    \State{} \Return{$1$}
+                \ElsIf{$n < 0$}
+                    \State{} \Return{$0$}
+                \Else{}
+                    \State{} \Return{$\Call{Ways}{n - 1} + \Call{Ways}{n - 2}$}
+                \EndIf{}
+            \EndFunction{}
+        \end{algorithmic}
 
-                \textbf{Base case:} If $n = 0$, there is 1 way to climb
-                the ladder, i.e., do nothing, and \textsc{Steps}$(0)$ 
-                returns 1.
-                
-                \textbf{Base case:} If $n < 0$, there are 0 ways to climb the
-                ladder, and \textsc{Steps}$(0)$ returns 0.
+    \end{homeworkAnswer}
 
-                \textbf{Inductive hypothesis:} Assume that for all $0 \leq m \leq 
-                k$, \textsc{Steps}$(m)$ outputs the correct result.
+    \pagebreak
 
-                \textbf{Inductive step:} For $n = k + 1$, the algorithm returns 
-                $\textsc{Steps}(k) + \textsc{Steps}( k- 1)$. By the inductive 
-                hypothesis, $\textsc{Steps}(k)$ correctly counts ways to reach 
-                rung $k$, from which it is possible to take 1 more step, and 
-                $\textsc{Steps}(k - 1)$ correctly counts ways to reach rung 
-                $k - 1$, from which we it is possible to take 2 more steps. 
-                Their sum then counts all distinct ways there are to reach rung 
-                $k + 1$, i.e., the top, by climbing either 1 rung or 2 rungs 
-                in each step. \end{proof}
-        \end{itemize}
+    \part
+
+    Prove correctness using induction.
+    \\
     
+    \begin{homeworkAnswer}[\solution]
+        
+        Below is a proof of correctness using induction on $n$ that the 
+        algorithm correctly computes how many distinct ways there are to climb 
+        a ladder with $n$ rungs by climbing either 1 rung or 2 rungs in each 
+        step.
+        
+        \begin{proof}
+            \textbf{Base cases:} 
+                
+            \begin{itemize}
+                \item If $n = 0$, there is 1 way to climb the ladder, i.e., do 
+                    nothing, and \textsc{Ways}$(0)$ returns 1.
+                
+                \item If $n < 0$, there are 0 ways to climb the ladder since it
+                    has negative steps, and \textsc{Ways}$(0)$ returns 0.
+            \end{itemize}
+
+            
+            \textbf{Inductive hypothesis:} Assume that for all $0 \leq m \leq 
+            k$, \textsc{Ways}$(m)$ outputs the correct result.
+            \\
+
+            \textbf{Inductive step:} For $n = k + 1$, the algorithm returns 
+            $\textsc{Ways}(k) + \textsc{Ways}(k- 1)$. By the inductive 
+            hypothesis, $\textsc{Ways}(k)$ correctly counts ways to reach 
+            rung $k$, from which it is possible to take 1 more step, and 
+            $\textsc{Ways}(k - 1)$ correctly counts ways to reach rung 
+            $k - 1$, from which we it is possible to take 2 more steps. 
+            Their sum then counts all distinct ways there are to reach rung 
+            $k + 1$, i.e., the top, by climbing either 1 rung or 2 rungs 
+            in each step. 
+        \end{proof}
+
     \end{homeworkAnswer}
 
 \end{homeworkProblem}

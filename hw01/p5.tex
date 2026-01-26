@@ -1,94 +1,200 @@
 \begin{homeworkProblem}[Counting Steps Efficiently]
-    \begin{itemize}
-        \item[(a)] Analyze the running time of your algorithm from the previous 
-            question. Is it bounded by a polynomial in $n$? Assume for 
-            simplicity that two integers can be added in one timestep.
+    
+    \part
 
-        \item[(b)] Give an efficient algorithm to compute the answer, and show 
-            the running time is bounded by $O(n)$ (polynomial in $n$ is also 
-            acceptable). 
-
-        \item[(c)] (Extra credit) Give an even more efficient algorithm to 
-            compute the answer, and analyze its running time, which should be 
-            sub-polynomial, again assuming each integer arithmetic operation 
-            takes $1$ step. {\it Hint: can you compute the answer by 
-            multiplying $2\times 2$ matrices?}
-
-            Is this running time a fair assessment of how the algorithm will 
-            perform in practice?
-
-    \end{itemize}
+    Analyze the running time of your algorithm from the previous 
+    question. Is it bounded by a polynomial in $n$? Assume for 
+    simplicity that two integers can be added in one timestep.
+    \\
 
     \begin{homeworkAnswer}[\solution]
-        \begin{itemize}
-            \item[(a)] The recurrence equation for the algorithm is $T(n) = 
-                T(n - 1) + T(n - 2) + O(n)$. No it is not bounded in polynomial
-                time because the tree grows approximately exponentially in size
-                with each increase in $n$.
 
-            \item[(b)] Below is an efficient algorithm to compute the answer.
-                {\color{blue}
-                \begin{algorithmic}[1]
-                    \Function{Steps}{$n$}
-                        \State{$\text{rungs}[0] \gets 1$}
-                        \State{$\text{rungs}[1] \gets 1$}
-                        \For{$i \gets 2$ \textbf{to} $n$}
-                            \State{$\text{rungs}[i] \gets \text{rungs}[i - 1] + \text{rungs}[i - 2]$}
-                        \EndFor{}
-                        \State{}\Return{$\text{rungs}[n]$}
-                    \EndFunction{}
-                \end{algorithmic}}
+        The recurrence relation for my algorithm from the previous question is 
+        $T(n) = T(n - 1) + T(n - 2)$, where $T(n)$ denotes the running % + O(1)
+        time of the algorithm and immediately returns at the base cases $T(0)$
+        and $T(n)$ for $n < 0$.
+        \\
 
-                
-                Let $C(n)$ denote the number of iterations of the for-loop in 
-                $\mathrm{Steps}(n)$. For $n \le 1$, the loop does not execute, 
-                so $C(n) = 0$. For $n \ge 2$, the loop runs for $i = 2, 3, 
-                \dots, n$, hence $C(n) = n - 1$. Each iteration performs one 
-                addition and a 
-                constant number of assignments, so costs $O(1)$ time. The 
-                initialization of $\text{rungs}[0]$ and $\text{rungs}[1]$ also 
-                costs $O(1)$. Therefore, the total running time is $O(1) + C(n) 
-                \cdot O(1) = O(n)$. The space usage is $O(n)$ to store 
-                $\text{rungs}[0..n]$.
-            
-            \item[(c)] Below is an even more efficient algorithm to compute the
-                answer:
+        Since $T(n - 1)$ must be greater than or equal to $T(n - 2)$, $T(n)$ is 
+        bounded from below by $2T(n - 2)$
+        \[
+            T(n) = T(n - 1) + T(n - 2) \geq T(n - 2) + T(n - 2) = 2 T(n - 2)
+        \]
+        
+        Through the recurrence relation, the inequality can be ``unraveled'' to
+        directly compute the running time of the lower bound to $T(n)$
+        \[
+            T(n) \geq 2 T(n - 2) \geq 2^2 T(n - 4) \geq \dots \geq 2^{\frac{n}{2}} 
+        \]
 
-                {\color{blue}
-                \begin{algorithmic}[1]
-                    \Function{Steps}{$n$}
-                        \State{$A \gets \left[\begin{array}{cc}1 & 1\\ 1 & 0\end{array}\right]$}
-                        \State{$A \gets \Call{MatrixPower}{A,\; n + 2}$}
-                        \State{}\Return{$A[1,1]$}
-                    \EndFunction{}
-                \end{algorithmic}}
+        So $T(n)$ grows at least as much as $2^{\frac{n}{2}}$, $T(n) = 
+        \Omega(2^\frac{n}{2})$. Similarly, since $T(n - 2)$ must be less than
+        or equal to $T(n - 1)$, $T(n)$ is bounded from below by $2T(n - 1)$
+        \[
+            T(n) = T(n - 1) + T(n - 2) \leq T(n - 1) + T(n - 1) = 2 T(n - 1)
+        \]
 
-                The above algorithm produces the correct answer on an arbitrary 
-                input of $n \geq 1$. The function leverages matrix 
-                multiplication of a $2 \times 2$ matrix, $A$, by computing 
-                $A^{n + 2}$ and returning the bottom-right entry of the result.
-                This works because $A$ encodes the base cases of the function
-                and computes an update in multiplication
+        This can also be unravled to directly compute the running time of the
+        upper bound to $T(n)$
+        \[
+            T(n) \leq 2 T(n - 1) \leq 2^2 T(n - 2) \geq \dots \geq 2^n 
+        \]
 
-                \[
-                    \left[\begin{array}{cc}
-                        \textsc{Steps}(n + 1) & \textsc{Steps}(n) \\
-                        \textsc{Steps}(n)     & \textsc{Steps}(n - 1)
-                    \end{array}\right] \times
-                    \left[\begin{array}{cc}
-                        1 & 1 \\
-                        1 & 0
-                    \end{array}\right] =
-                    \left[\begin{array}{cc}
-                        \textsc{Steps}(n + 2) & \textsc{Steps}(n + 1) \\
-                        \textsc{Steps}(n + 1) & \textsc{Steps}(n)
-                    \end{array}\right]
-                \]
+        So $T(n)$ grows at least as fast as $2^n$, $T(n) = O(2^n)$. These
+        bounds show that the running time for my algorithm from the previous
+        question is not bounded by a polynomial in $n$, but is rather
+        exponential. The running time grows as fast as an exponential function
+        with a base $a$ between $\sqrt{2}$ (since $2^\frac{n}{2} = 
+        (2^\frac{1}{2})^n  = (\sqrt{2})^n$) and $2$. Plugging $T(n) = 
+        \Theta(a^n)$ into the recurrence relation produces the following
+        \[
+            \begin{split}
+                T(n) &= T(n - 1) + T(n - 2) \\
+                a^n &= a^{n - 1} + a^{n - 2} \\
+                \frac{a^n}{a^{n - 2}} &= \frac{a^{n - 1}}{a^{n - 2}} + 1 \\
+                \frac{a^n}{a^n a^{-2}} &= \frac{a^n}{a^{n} a^{-1}} + 1 \\
+                a^2 &= a + 1 \\
+            \end{split}
+        \]
 
-                and on an arbitrary input of $n \geq 1$, computing $A^{n + 2}$
-                will result in a $2 \times 2$ matrix with $\textsc{Steps}(n)$
-                in its bottom-right corner, which is returned. 
-                
-        \end{itemize}
+        Now solving for $a$ will result in the base of the exponential function
+        that determines the running time for my algorithm
+        \[
+            \begin{split}
+                0 &= a^2 - a - 1 \\
+                a &= \frac{-(-1) \pm \sqrt{(-1)^2 - 4(1)(-1)}}{2(1)} \\
+                a &= \frac{1 \pm \sqrt{5}}{2}
+            \end{split}
+        \]
+
+        where the base then equals $\frac{1 + \sqrt{5}}{2}$ which is
+        approximately $a \approx 1.618$ and between $\sqrt{2}$ and $2$. 
+        Therefore, the running time for my algorithm is
+        \[
+            T(n) = \Theta\left(\left(\frac{1 + \sqrt{5}}{2}\right)^n\right)
+        \]
+
     \end{homeworkAnswer}
+
+    \pagebreak
+    
+    \part
+
+    Give an efficient algorithm to compute the answer, and show the running 
+    time is bounded by $O(n)$ (polynomial in $n$ is also acceptable). 
+    \\
+
+    \begin{homeworkAnswer}[\solution]
+        
+        Below is an efficient algorithm to compute the answer.
+
+        \smallskip
+
+        {\color{blue}
+        \begin{algorithmic}[1]
+            \Function{Ways}{$n$}
+                \State{$\text{rungs}[0] \gets 1$}
+                \State{$\text{rungs}[1] \gets 1$}
+                \For{$i \gets 2$ \textbf{to} $n$}
+                    \State{$\text{rungs}[i] \gets \text{rungs}[i - 1] + \text{rungs}[i - 2]$}
+                \EndFor{}
+                \State{}\Return{$\text{rungs}[n]$}
+            \EndFunction{}
+        \end{algorithmic}}
+
+        \smallskip
+
+        The above algorithm implements the base cases and recurrence of my
+        previous algorithm iteratively. From the base cases $n = 0$ and 
+        $n = 1$,  where there is only 1 way to climb the rung in each case, the
+        algorithm builds up the solution for increasing values of $n$ using the
+        recurrence relation $\textsc{Ways}(k) = \textsc{Ways}(k - 1) + 
+        \textsc{Ways}(k - 2)$. The values are maintained in a dictionary for
+        reference in future iterations. 
+        \\
+
+        The loop executes $n -2$ times, and each iteration executes accessing, 
+        adding, and assigning values in constant time. The initialization of 
+        the base cases and returning the result also execute in constant time. 
+        So the algorithm achieves linear runtime complexity, $O(1) + (n - 2) 
+        \times O(1) = O(n)$, by only computing each subproblem once, instead of
+        many times as in my previous algorithm.
+
+    \end{homeworkAnswer}
+
+    \pagebreak
+    \part
+
+    (Extra credit) Give an even more efficient algorithm to compute the answer, 
+    and analyze its running time, which should be sub-polynomial, again 
+    assuming each integer arithmetic operation takes $1$ step. {\it Hint: can 
+    you compute the answer by multiplying $2\times 2$ matrices?}
+    \\
+
+    Is this running time a fair assessment of how the algorithm will perform in 
+    practice?
+    \\
+
+    \begin{homeworkAnswer}[\solution]
+        
+        Below is an even more efficient algorithm to compute the
+        answer:
+
+        \smallskip
+
+        {\color{blue}
+        \begin{algorithmic}[1]
+            \Function{Ways}{$n$}
+                \State{$A \gets \left[\begin{array}{cc}1 & 1\\ 1 & 0\end{array}\right]$}
+                \State{$A \gets \Call{MatrixPower}{A,\; n + 2}$}
+                \State{}\Return{$A[1,1]$}
+            \EndFunction{}
+        \end{algorithmic}}
+
+        \smallskip
+
+        The above algorithm produces the correct answer on an arbitrary input 
+        of $n \geq 0$. The function leverages matrix multiplication of a $2 
+        \times 2$ matrix, $A$, by computing $A^{n + 2}$ and returning the 
+        bottom-right entry of the result. This works because $A$ encodes the 
+        base cases of the function and computes an update in multiplication
+
+        \[
+            \left[\begin{array}{cc}
+                \textsc{Ways}(n + 1) & \textsc{Ways}(n) \\
+                \textsc{Ways}(n)     & \textsc{Ways}(n - 1)
+            \end{array}\right] \times
+            \left[\begin{array}{cc}
+                1 & 1 \\
+                1 & 0
+            \end{array}\right] =
+            \left[\begin{array}{cc}
+                \textsc{Ways}(n + 2) & \textsc{Ways}(n + 1) \\
+                \textsc{Ways}(n + 1) & \textsc{Ways}(n)
+            \end{array}\right]
+        \]
+
+        and on an arbitrary input of $n \geq 0$, computing $A^{n + 2}$
+        will result in a $2 \times 2$ matrix with $\textsc{Ways}(n)$
+        in its bottom-right corner. Since the base cases $\textsc{Ways}(1)$ 
+        and $\textsc{Ways}(0)$ are both equal to 1, $A$ also encodes the base
+        cases of the algorithm. 
+        \\
+
+        Each matrix multiplication executes in constant time, with eight 
+        multiplications and four additions in the case of $2 \times 2$ 
+        matrices. However, since $\textsc{MatrixPower}$ uses exponentiation via
+        repeated squaring, it does not execute matrix multiplication $n - 2$ 
+        times. For example, for an even $n + 2$, $\log(n + 2)$ matrix 
+        multiplications are executed, $A^1, A^2, A^4, A^8 \dots$, to arrive at
+        the answer. So the running time of this algorithm is logarithmic, 
+        $O(\log n)$.
+        \\
+
+        This is not a fair assessment of how the algorithm will perform in
+        practice because for large integers the arithmetic operations will not
+        execute in one step. 
+
+    \end{homeworkAnswer}
+
 \end{homeworkProblem}
