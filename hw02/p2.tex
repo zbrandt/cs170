@@ -1,12 +1,76 @@
 \begin{homeworkProblem}[Maximum Subarray Sum (10 points)]
 
-Given an array $A$ of $n$ integers, the maximum subarray sum is the largest sum of any contiguous subarray of $A$ (including the empty subarray). In other words, the maximum subarray sum is:
-\[
-\max_{i \leq j} \sum_{\ell=i}^{j} A[k]
-\]
+    Given an array $A$ of $n$ integers, the maximum subarray sum is the largest 
+    sum of any contiguous subarray of $A$ (including the empty subarray). In 
+    other words, the maximum subarray sum is:
+    
+    \[
+        \max_{i \leq j} \sum_{\ell=i}^{j} A[k]
+    \]
 
-For example, the maximum subarray sum of $[-2, 1, -3, 4, -1, 2, 1, -5, 4]$ is 6, the sum of the contiguous subarray $[4, -1, 2, 1]$.
+    For example, the maximum subarray sum of $[-2, 1, -3, 4, -1, 2, 1, -5, 4]$ 
+    is 6, the sum of the contiguous subarray $[4, -1, 2, 1]$.
 
-Design an $O(n \log n)$-time divide-and-conquer algorithm that finds the maximum subarray sum. Briefly explain why your algorithm is correct and justify its running time.
+    Design an $O(n \log n)$-time divide-and-conquer algorithm that finds the 
+    maximum subarray sum. Briefly explain why your algorithm is correct and 
+    justify its running time.
+
+    \solution \\
+    Below is my algorithm description of a divide-and-conquer algorithm 
+    \alg{MaxSubarraySum(A)} presented in pseudocode.
+
+    \begin{algorithm}[h]
+        \begin{algorithmic}[1]
+            \Function{MaxSubarraySum}{$A$}
+                \If{$A$ is empty}
+                    \State{} \Return{0}
+                \EndIf{}
+                \If{$A$ has one element}
+                    \State{} \Return{$\max(0, A[0])$}
+                \EndIf{}
+                \State{} $mid \gets \lfloor |A| / 2 \rfloor$
+                \State{} $L \gets A[0 \ldots mid-1]$, $R \gets A[mid \ldots |A|-1]$
+                \State{} $leftMax \gets$ \Call{MaxSubarraySum}{$L$}
+                \State{} $rightMax \gets$ \Call{MaxSubarraySum}{$R$}
+                \State{}
+                \State{} $maxStart \gets -\infty$, $sum \gets 0$
+                \For{$i$ from $|L|-1$ down to $0$}
+                    \State{} $sum \gets sum + L[i]$
+                    \State{} $maxStart \gets \max(maxStart, sum)$
+                \EndFor{}
+                \State{}
+                \State{} $maxEnd \gets -\infty$, $sum \gets 0$
+                \For{$i$ from $0$ to $|R|-1$}
+                    \State{} $sum \gets sum + R[i]$
+                    \State{} $maxEnd \gets \max(maxEnd, sum)$
+                \EndFor{}
+                \State{}
+                \State{} \Return{$\max(leftMax, rightMax, maxStart + maxEnd)$}
+            \EndFunction{}
+        \end{algorithmic}
+    \end{algorithm}
+
+    The algorithm \alg{MaxSubarraySum(A)} produces the correct result on an 
+    array of $n$ integers because each call selects the maximum over the 
+    maximum subarray sums for the left and right halves of the $n$ integers and
+    the maximum subarray sum of an array that crosses over the two halves. To 
+    find the crossover subarray sum, the algorithm scans right to left for the 
+    left half to find the maximum contribution from that half, and vice versa
+    for the right half. The subproblems build up and select maximum sums from 
+    subarrays that are entirely in each half or crossover.
+
+    The following recurrence relation describes the runtime of the algorithm:
+
+    \[
+        T(n) = 2 T(\tfrac{n}{2}) + O(n)
+    \]
+
+    At each level of recursion finding the crossover subarray sum executes
+    in $O(n)$ time, since the for loops iterate over the entire length of $A$
+    once. The algorithm partitions $A$ into left and right halves on each
+    recursion. Following from Master Theorem, the runtime is $O(n \log n)$ 
+    since $\log_{b} a = d$ where $a = 2$, $b = 2$, and $d = 1$. 
+
+
 
 \end{homeworkProblem}
