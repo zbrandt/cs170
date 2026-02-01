@@ -40,7 +40,7 @@
     Below is my algorithm description of a randomized algorithm 
     \alg{Match(items)} presented in pseudocode. 
 
-    \begin{algorithm}[]
+    \begin{algorithm}[h]
         \begin{algorithmic}[1]
             \Function{Match}{$items$}
                 \If{$items$ is empty}
@@ -70,5 +70,34 @@
     remain valid since there will be an equal number of keys and locks in each
     subarray with sizes stricly greater or smaller than the pivot key-lock 
     pair.
+
+    \pagebreak
+
+    \part 
+
+    Give an intuitive argument that your algorithm from part (a) usually runs 
+    in time $O(n \log n)$.
+            
+    You may make the simplifying assumption that the keys and locks are truly 
+    magical, in the sense that if you choose a random key from any set of $m$ 
+    keys, you always get the key of median (i.e. $\lfloor m/2 \rfloor$th 
+    largest) size.
+
+    \solution \\
+    If the key of median size is always chosen when choosing at random from the
+    list of items, then the following recurrence relation describes the runtime
+    of the algorithm:
+
+    \[
+        T(n) = 2T(\tfrac{n}{2}) + O(n)
+    \]
+
+    At each level of recursion $O(n)$ work is done in finding the corresponding
+    key or lock to the randomly selected median lock or key, respectively. The
+    size of the left and right subarrays partitioned from the original array 
+    will then be approximately half of the size of the original items array. 
+    The algorithm will then recurse on both on halves and do $O(\frac{n}{2})$
+    work. Following from Master Theorem, the runtime is $O(n \log n)$ since
+    $\log_{b} a = d$ where $a = 2$, $b = 2$, and $d = 1$. 
 
 \end{homeworkProblem}
