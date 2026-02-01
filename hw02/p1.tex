@@ -1,17 +1,74 @@
 \begin{homeworkProblem}[The Magical Keys and Locks (Solo Question; 10 points)]
 
-In the ancient kingdom of Keylom, there are $n$ magical keys and $n$ enchanted locks, such that each key (and each lock) has a unique size between 1 and $n$. The unique key of size $i$ opens the unique lock of size $i$. You cannot directly compare two keys with each other, nor can you compare two locks. The \emph{only} thing you can do is insert any key into any lock and see whether it is too small for the lock's keyhole, too big for it, or if it is a perfect fit.
+    In the ancient kingdom of Keylom, there are $n$ magical keys and $n$ 
+    enchanted locks, such that each key (and each lock) has a unique size 
+    between 1 and $n$. The unique key of size $i$ opens the unique lock of size 
+    $i$. You cannot directly compare two keys with each other, nor can you 
+    compare two locks. The \emph{only} thing you can do is insert any key into 
+    any lock and see whether it is too small for the lock's keyhole, too big 
+    for it, or if it is a perfect fit.
 
-After a lively lantern festival in the village square, the townsfolk accidentally jumbled all the keys and locks into a single array of $2n$ items, in completely arbitrary order. No one remembers which key matches which lock. Your task is to match each key back to its corresponding lock.
+    After a lively lantern festival in the village square, the townsfolk 
+    accidentally jumbled all the keys and locks into a single array of $2n$ 
+    items, in completely arbitrary order. No one remembers which key matches 
+    which lock. Your task is to match each key back to its corresponding lock.
 
-\begin{enumerate}[(a)]
-    \item (5 points) Design a \emph{randomized} algorithm that takes this array of $2n$ items as input and returns an array of $n$ key-lock pairs, each of which is a perfect fit. Explain why your algorithm always outputs the correct answer.
-    
-    \item (5 points) Give an intuitive argument that your algorithm from part (a) usually runs in time $O(n \log n)$.
+    \begin{enumerate}[(a)]
+        \item (5 points) Design a \emph{randomized} algorithm that takes this 
+            array of $2n$ items as input and returns an array of $n$ key-lock 
+            pairs, each of which is a perfect fit. Explain why your algorithm 
+            always outputs the correct answer.
         
-        You may make the simplifying assumption that the keys and locks are truly magical, in the sense that if you choose a random key from any set of $m$ keys, you always get the key of median (i.e. $\lfloor m/2 \rfloor$th largest) size.
-\end{enumerate}
+        \item (5 points) Give an intuitive argument that your algorithm from 
+            part (a) usually runs in time $O(n \log n)$.
+            
+            You may make the simplifying assumption that the keys and locks are 
+            truly magical, in the sense that if you choose a random key from 
+            any set of $m$ keys, you always get the key of median (i.e. 
+            $\lfloor m/2 \rfloor$th largest) size.
+    \end{enumerate}
 
+    \pagebreak
+    
+    \part
+    
+    Design a \emph{randomized} algorithm that takes this array of $2n$ items as 
+    input and returns an array of $n$ key-lock pairs, each of which is a 
+    perfect fit. Explain why your algorithm always outputs the correct answer.
 
+    \solution \\
+    Below is my algorithm description of a randomized algorithm 
+    \alg{Match(items)} presented in pseudocode. 
+
+    \begin{algorithm}[]
+        \begin{algorithmic}[1]
+            \Function{Match}{$items$}
+                \If{$items$ is empty}
+                    \State{} \Return{empty list}
+                \EndIf{}
+                \State{} $p \gets$ random item from $items$
+                \State{} Find the matching pair $(k, \ell)$ for $p$ by testing $p$ against all items
+                \State{} $left \gets$ empty list, $right \gets$ empty list
+                \For{each item $x$ in $items$ (excluding $k$ and $\ell$)}
+                    \If{$x$ is a key}
+                        \State{} Compare $x$ to lock $\ell$
+                        \State{} Add $x$ to $left$ if smaller, $right$ if larger
+                    \ElsIf{$x$ is a lock}
+                        \State{} Compare $x$ to key $k$
+                        \State{} Add $x$ to $left$ if smaller, $right$ if larger
+                    \EndIf{}
+                \EndFor{}
+                \State{} \Return{\Call{Match}{$left$} $+$ $[(k, \ell)]$ $+$ \Call{Match}{$right$}}
+            \EndFunction{}
+        \end{algorithmic}
+    \end{algorithm}
+
+    The algorithm \alg{Match(items)} produces the correct result on an 
+    arbitarily ordered array of $2n$ items because each call identifies one 
+    correct key-lock pair and partitions the remaining elements without
+    directly comparing two keys with each other or two locks. The subproblems
+    remain valid since there will be an equal number of keys and locks in each
+    subarray with sizes stricly greater or smaller than the pivot key-lock 
+    pair.
 
 \end{homeworkProblem}
