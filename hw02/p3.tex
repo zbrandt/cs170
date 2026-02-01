@@ -1,0 +1,16 @@
+\begin{homeworkProblem}[Monotone matrices (10 points)]
+
+A $m$-by-$n$ matrix $A$ is \emph{monotone} if $n \geq m$, each row of $A$ has no duplicate entries, and it has the following property: if the minimum of row $i$ is located at column $j_i$, then $j_1 < j_2 < j_3 \ldots j_m$. For example, the following 3-by-6 matrix is monotone (the minimum of each row is bolded), since $j_1 = 1, j_2 = 3, j_3 = 6$:
+\[
+\begin{bmatrix}
+\textbf{1} & 3 & 4 & 6 & 5 & 2 \\
+7 & 3 & \textbf{2} & 5 & 6 & 4 \\
+7 & 9 & 6 & 3 & 10 & \textbf{0}
+\end{bmatrix}
+\]
+
+Give an efficient (i.e., significantly better than $O(mn)$-time) algorithm that finds the minimum in each row of an $m$-by-$n$ monotone matrix $A$.
+
+Bound the running time of your algorithm. Note: you might find it easier to bound the work per level of recursion directly rather than writing a formal recurrence relation.
+
+\end{homeworkProblem}

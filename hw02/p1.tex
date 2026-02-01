@@ -1,0 +1,17 @@
+\begin{homeworkProblem}[The Magical Keys and Locks (Solo Question; 10 points)]
+
+In the ancient kingdom of Keylom, there are $n$ magical keys and $n$ enchanted locks, such that each key (and each lock) has a unique size between 1 and $n$. The unique key of size $i$ opens the unique lock of size $i$. You cannot directly compare two keys with each other, nor can you compare two locks. The \emph{only} thing you can do is insert any key into any lock and see whether it is too small for the lock's keyhole, too big for it, or if it is a perfect fit.
+
+After a lively lantern festival in the village square, the townsfolk accidentally jumbled all the keys and locks into a single array of $2n$ items, in completely arbitrary order. No one remembers which key matches which lock. Your task is to match each key back to its corresponding lock.
+
+\begin{enumerate}[(a)]
+    \item (5 points) Design a \emph{randomized} algorithm that takes this array of $2n$ items as input and returns an array of $n$ key-lock pairs, each of which is a perfect fit. Explain why your algorithm always outputs the correct answer.
+    
+    \item (5 points) Give an intuitive argument that your algorithm from part (a) usually runs in time $O(n \log n)$.
+        
+        You may make the simplifying assumption that the keys and locks are truly magical, in the sense that if you choose a random key from any set of $m$ keys, you always get the key of median (i.e. $\lfloor m/2 \rfloor$th largest) size.
+\end{enumerate}
+
+
+
+\end{homeworkProblem}
