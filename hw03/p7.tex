@@ -1,0 +1,71 @@
+\section{Strongly Connected Components (7 points)}
+
+For full credit, you should do {\bf one of the following two} questions. (You may solve the other for fun if you want!)
+
+\begin{enumerate}
+\item 
+In the 2SAT problem, you are given a set of clauses, where each clause is the disjunction (\textsc{OR}) of
+two literals (a literal is a Boolean variable or the negation of a Boolean variable). You are looking
+for a way to assign a value true or false to each of the variables so that all clauses are satisfied -- that is, there is at least one true literal in each clause. For example, here's an instance of 2SAT:
+$$(x_1 \vee \overline{x_2} ) \wedge (\overline{x_1} \vee \overline{x_3} ) \wedge (x_1 \vee x_2 ) \wedge (\overline{x_3} \vee x_4 ) \wedge (\overline{x_1} \vee x_4)$$
+
+Recall that $\vee$ is the logical-OR operator and $\wedge$ is the logical-AND operator and $\overline{x}$ denotes the negation of the variable $x$. This instance has a satisfying assignment: set $x_1$, $x_2$, $x_3$, and $x_4$ to \texttt{true, false, false, and
+true}, respectively.
+
+The purpose of this problem is to lead you to a way of solving 2SAT efficiently by reducing it to
+the problem of finding the strongly connected components of a directed graph. Given an instance
+$I$ of 2SAT with $n$ variables and $m$ clauses, construct a directed graph $G_I = (V, E)$ as follows.
+\begin{itemize}
+\item $G_I$ has $2n$ nodes: one for each variable and its negation.
+\item $G_I$ has $2m$ edges: for each clause $(\alpha \vee \beta)$ of $I$ (where $\alpha$, $\beta$ are literals), $G_I$ has an edge from
+from $\overline{\alpha}$ to $\beta$, and one from the $\overline{\beta}$ to $\alpha$.
+\end{itemize}
+Note that the clause ($\alpha \vee \beta$) is equivalent to each of the implications $\overline{\alpha} \implies \beta$ and $\overline{\beta} \implies \alpha$. In this sense, $G_I$ records all implications in $I$.
+
+\begin{enumerate}
+\item[(a)] (2 points) Show that if $G_I$ has a strongly connected component containing both $x$ and $\overline x$ for some
+variable $x$, then $I$ has no satisfying assignment.
+
+\item[(b)] (2 points) Now show the converse of (a): namely, that if none of $G_I$'s strongly connected components
+contain both a literal and its negation, then the instance $I$ must be satisfiable. 
+
+\emph{Hint: Pick a sink SCC of $G_I$. Assign variable values so that all literals in the sink are True. Why are we allowed to do this, and why doesn't it break any implications?}
+
+\item[(c)] (2 points) Use the previoius parts to construct a linear-time algorithm for solving 2SAT. 
+
+\item[(d)] (1 point) Try generalizing your algorithm to 3SAT, where each clause has three literals, e.g.~$(x_1 \vee \overline{x_2} \vee x_3) \wedge (\overline{x_1} \vee \overline{x_3} \vee x_4)$. Briefly explain why it works (or else what goes wrong).
+\end{enumerate}
+
+\item
+Implement DFS and the SCC-finding algorithm covered in lecture. There are two ways that you can access the notebook and complete the problems:
+\begin{enumerate}
+    \item \textbf{On Datahub}: click \textcolor{blue}{\href{https://datahub.berkeley.edu/hub/user-redirect/git-pull?repo=https://github.com/Berkeley-CS170/cs170-sp26-coding}{here}} and navigate to the \texttt{hw03} folder. 
+    
+    \item \textbf{On Local Machine}: \texttt{git clone} (or if you already cloned it, \texttt{git pull}) from the coding homework repo, 
+    
+    \textcolor{blue}{\href{https://github.com/Berkeley-CS170/cs170-sp26-coding}{\texttt{https://github.com/Berkeley-CS170/cs170-sp26-coding}}}
+    
+    and navigate to the \texttt{hw03} folder. Refer to the \texttt{README.md} for local setup instructions.
+
+\end{enumerate}
+
+\noindent Notes:
+\begin{itemize}
+    \item \textit{Submission Instructions:} Please download your completed submission \texttt{.zip} file and submit it to the Gradescope assignment titled ``Homework 3 Coding Portion''. 
+
+    \item \textit{Getting Help:} Conceptual questions are always welcome on Edstem and office hours; \textit{note that support for debugging help during OH will be limited}. If you need debugging help first try asking on the public Edstem threads. To ensure others can help you, make sure to:
+        \begin{enumerate}
+            \item Describe the steps you've taken to debug the issue prior to posting on Ed.
+            \item Describe the specific error you're running into.
+            \item Include a few small but nontrivial test cases, alongside both the output you expected to receive and your function's actual output. 
+        \end{enumerate}
+    If staff tells you to make a private Ed post, make sure to include \textit{all of the above items} plus your full function implementation. If you don't provide them, we will ask you to provide them.
+    
+    \item \textit{Academic Honesty Guideline:} We realize that code for some of the algorithms we ask you to implement may be readily available online, but we strongly encourage you to not directly copy code from these sources. Instead, try to refer to the resources mentioned in the notebook and come up with code yourself. That being said, we \textbf{do acknowledge} that there may not be many different ways to code up particular algorithms and that your solution may be similar to other solutions available online.
+    
+\end{itemize}
+\end{enumerate}
+
+\subsection*{Solution}
+
+% Your solution here
