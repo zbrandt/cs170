@@ -48,16 +48,16 @@
 
     The algorithm \alg{FindRowMinimums(A)} produces the correct result on an 
     $m$-by-$n$ monotone matrix because it exploits the monotone property to 
-    partition the matrix into independent subproblems. When we find the minimum 
-    of the middle row at column $minCol$, the monotone property guarantees that
-    all rows above the middle row have their minimums at columns $< minCol$ 
+    partition the matrix into independent subproblems. When the minimum of the 
+    middle row at column $minCol$ is found, the monotone property guarantees 
+    that all rows above the middle row have their minimums at columns $< minCol$ 
     (since $j_1 < j_2 < \ldots < j_{mid}$). All rows below the middle row have 
     their minimums at columns $> minCol$ (since $j_{mid} < j_{mid+1} < \ldots < 
-    j_m$). Therefore, the top subproblem can be restricted to columns $[0, 
-    minCol-1]$ and the bottom subproblem to columns $[minCol+1, n-1]$, knowing 
-    that no row minimum is excluded. Each recursive call maintains the monotone 
-    property on its submatrix, and the base case correctly returns the single 
-    row's minimum.
+    j_m$). Therefore, the top subproblem can be restricted to columns 
+    $[0, minCol-1]$ and the bottom subproblem to columns $[minCol+1, n-1]$, 
+    knowing that no row minimum is excluded. Each recursive call maintains the 
+    monotone property on its submatrix, and the base case correctly returns the 
+    single row's minimum.
 
     At each recursion level, at most $n$ entries are scanned in finding the 
     minimum. Additionally, the subproblem is approximately halved each time, 
