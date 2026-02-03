@@ -1,16 +1,67 @@
 \begin{homeworkProblem}[Monotone matrices (10 points)]
 
-A $m$-by-$n$ matrix $A$ is \emph{monotone} if $n \geq m$, each row of $A$ has no duplicate entries, and it has the following property: if the minimum of row $i$ is located at column $j_i$, then $j_1 < j_2 < j_3 \ldots j_m$. For example, the following 3-by-6 matrix is monotone (the minimum of each row is bolded), since $j_1 = 1, j_2 = 3, j_3 = 6$:
-\[
-\begin{bmatrix}
-\textbf{1} & 3 & 4 & 6 & 5 & 2 \\
-7 & 3 & \textbf{2} & 5 & 6 & 4 \\
-7 & 9 & 6 & 3 & 10 & \textbf{0}
-\end{bmatrix}
-\]
+    A $m$-by-$n$ matrix $A$ is \emph{monotone} if $n \geq m$, each row of $A$ 
+    has no duplicate entries, and it has the following property: if the minimum 
+    of row $i$ is located at column $j_i$, then $j_1 < j_2 < j_3 \ldots j_m$. 
+    For example, the following 3-by-6 matrix is monotone (the minimum of each 
+    row is bolded), since $j_1 = 1, j_2 = 3, j_3 = 6$:
+    
+    \[
+        \begin{bmatrix}
+            \textbf{1} & 3 & 4 & 6 & 5 & 2 \\
+            7 & 3 & \textbf{2} & 5 & 6 & 4 \\
+            7 & 9 & 6 & 3 & 10 & \textbf{0}
+        \end{bmatrix}
+    \]
 
-Give an efficient (i.e., significantly better than $O(mn)$-time) algorithm that finds the minimum in each row of an $m$-by-$n$ monotone matrix $A$.
+    Give an efficient (i.e., significantly better than $O(mn)$-time) algorithm 
+    that finds the minimum in each row of an $m$-by-$n$ monotone matrix $A$.
 
-Bound the running time of your algorithm. Note: you might find it easier to bound the work per level of recursion directly rather than writing a formal recurrence relation.
+    Bound the running time of your algorithm. Note: you might find it easier to 
+    bound the work per level of recursion directly rather than writing a formal 
+    recurrence relation.
+
+    \solution \\
+    Below is my algorithm description of a divide-and-conquer algorithm 
+    \alg{FindRowMinimums(A)} presented in pseudocode.
+
+    \begin{algorithm}[h]
+        \begin{algorithmic}[1]
+            \Function{FindRowMinimums}{$A$}
+                \If{$A$ has one row}
+                    \State{} \Return{minimum element of $A[0]$}
+                \EndIf{}
+                \State{} $mid \gets \lfloor |A| / 2 \rfloor$
+                \State{} Find minimum of row $A[mid]$ and let $minCol$ be its column index
+                \State{} $minVal \gets A[mid][minCol]$
+                \State{}
+                \State{} $top \gets A[0 \ldots mid-1, 0 \ldots minCol-1]$
+                \State{} $bottom \gets A[mid+1 \ldots |A|-1, minCol+1 \ldots n-1]$
+                \State{}
+                \State{} $topMins \gets$ \Call{FindRowMinimums}{$top$}
+                \State{} $bottomMins \gets$ \Call{FindRowMinimums}{$bottom$}
+                \State{}
+                \State{} \Return{$topMins + [minVal] + bottomMins$}
+            \EndFunction{}
+        \end{algorithmic}
+    \end{algorithm}
+
+    The algorithm \alg{FindRowMinimums(A)} produces the correct result on an 
+    $m$-by-$n$ monotone matrix because it exploits the monotone property to 
+    partition the matrix into independent subproblems. When we find the minimum 
+    of the middle row at column $minCol$, the monotone property guarantees that
+    all rows above the middle row have their minimums at columns $< minCol$ 
+    (since $j_1 < j_2 < \ldots < j_{mid}$). All rows below the middle row have 
+    their minimums at columns $> minCol$ (since $j_{mid} < j_{mid+1} < \ldots < 
+    j_m$). Therefore, the top subproblem can be restricted to columns $[0, 
+    minCol-1]$ and the bottom subproblem to columns $[minCol+1, n-1]$, knowing 
+    that no row minimum is excluded. Each recursive call maintains the monotone 
+    property on its submatrix, and the base case correctly returns the single 
+    row's minimum.
+
+    At each recursion level, at most $n$ entries are scanned in finding the 
+    minimum. Additionally, the subproblem is approximately halved each time, 
+    therefore leading to $O(\log m)$ levels. Therefore, the runtime of the
+    algorithm is $O(n \log m)$. 
 
 \end{homeworkProblem}
