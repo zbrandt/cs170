@@ -1,13 +1,114 @@
 \begin{homeworkProblem}[Werewolves (10 points)]
 
-You are playing a party game with $n$ other friends, who each play either as a werewolf or a villager. Your friends know who is a werewolf, but all your friends do. But you know that there are more villagers than there are werewolves. And you also know that villagers always tell the truth, while werewolves can either lie or tell the truth.
+    You are playing a party game with $n$ other friends, who each play either 
+    as a werewolf or a villager. Your friends know who is a werewolf, but all 
+    your friends do. But you know that there are more villagers than there are 
+    werewolves. And you also know that villagers always tell the truth, while 
+    werewolves can either lie or tell the truth.
 
-Your goal is to identify one player who is definitely a villager. Your elementary query is to pair up two people and ask each whether the other is a villager or werewolf. Your algorithm should work regardless of the behavior of the werewolves.
+    Your goal is to identify one player who is definitely a villager. Your 
+    elementary query is to pair up two people and ask each whether the other is 
+    a villager or werewolf. Your algorithm should work regardless of the 
+    behavior of the werewolves.
 
-\begin{enumerate}[(a)]
-    \item (5 points) For a given person $x$, devise an algorithm that returns whether or not $x$ is a villager using $O(n)$ queries.
+    \begin{enumerate}[(a)]
+        \item (5 points) For a given person $x$, devise an algorithm that 
+            returns whether or not $x$ is a villager using $O(n)$ queries.
+        
+        \item (5 points) Show how to find a villager in $O(n \log n)$ queries 
+            using a divide-and-conquer algorithm.
+    \end{enumerate}
+
+    \pagebreak
+
+    \part 
+
+    For a given person $x$, devise an algorithm that returns whether or not $x$ 
+    is a villager using $O(n)$ queries.
+
+    \solution \\
+    A simple algorithm that returns whether or not a given person $x$ is a 
+    villager or not is to make $n - 1$ queries with pairs consisting of $x$ and
+    all the other players. If more than $\tfrac{n}{2}$ players say the player 
+    $x$ is a villager, then the algorithm returns in the affirmative, i.e., 
+    that player $x$ is indeed a villager. Otherwise, the algorithm returns with
+    the opposite result, i.e., that player $x$ is a werewolf. 
+
+    The algorithm produces the correct result on a given person $x$ because
+    villagers will always tell the truth and there are more villagers than
+    there are werewolves. This is because werewolves may or may not tell the
+    truth. With this algorithm, even if all werewolves were to lie and say
+    that $x$ is a villager when they really aren't, all the villagers would 
+    tell the truth and answer in the negative. 
+
+    The algorithm executes in $O(n)$ time since $n - 1$ queries need to be 
+    performed before making a decision. 
+
+    \pagebreak
+
+    \part 
     
-    \item (5 points) Show how to find a villager in $O(n \log n)$ queries using a divide-and-conquer algorithm.
-\end{enumerate}
+    Show how to find a villager in $O(n \log n)$ queries using a 
+    divide-and-conquer algorithm.
+
+    \solution \\
+    Below is my algorithm description of a divide-and-conquer algorithm 
+    \alg{FindVillager(Friends)} presented in pseudocode.
+
+    \begin{algorithm}[h]
+        \begin{algorithmic}[1]
+            \Function{FindVillager}{$Friends$}
+                \If{$|Friends| = 1$}
+                    \State{} \Return{$Friends[0]$}
+                \EndIf{}
+                \State{} $mid \gets \lfloor|Friends| / 2\rfloor$
+                \State{} $Left \gets Friends[0 \ldots mid-1]$
+                \State{} $Right \gets Friends[mid \ldots |Friends|-1]$
+                \State{} $x \gets \Call{FindVillager}{Left}$
+                \State{} $y \gets \Call{FindVillager}{Right}$
+                \If{\Call{IsVillager}{$x$, $Friends$}}
+                    \State{} \Return{$x$}
+                \Else{}
+                    \State{} \Return{$y$}
+                \EndIf{}
+            \EndFunction{}
+        \end{algorithmic}
+    \end{algorithm}
+
+    The algorithm \alg{FindVillager(Friends)} uses the divide-and-conquer 
+    approach by splitting the group into two halves and recursively finding 
+    candidate villagers $x$ and $y$ from each half. It then uses the procedure 
+    from part (a), \alg{IsVillager(x, Friends)}, to check if $x$ or $y$ is a 
+    villager by querying all other friends in the original group and returning 
+    the one who is identified as a villager.
+
+    The algorithm correctly returns a villager from any group where the 
+    majority are villagers. When the friend group is partitioned into two 
+    halves, at least one half must contain more villagers than werewolves. 
+    This is because if both halves had more werewolves than villagers, then the 
+    entire friend group would have more werewolves than villagers, contradicting 
+    the starting assumption. Therefore, at each level of recursion, the majority 
+    is preserved in at least one of the two subgroups.
+    
+    When the algorithm reaches the base case of a single person in a group, that 
+    person is returned. Working back up through the recursion, each recursive 
+    call returns some candidate from its subgroup. At least one of the two 
+    candidates $x$ and $y$ must be an actual villager, since at least one of 
+    the two subgroups had a villager majority and thus returned a villager.
+    Using \alg{IsVillager(x, Friends)} from part (a) ensures the villager is 
+    returned. 
+    
+    The runtime of the algorithm is in $O(n \log n)$. The following recurrence 
+    relation defintes this runtime:
+
+    \[
+        T(n) = 2T\left(\tfrac{n}{2}\right) + O(n)
+    \]
+
+    At each level of recursion, the algorithm makes two recursive calls on 
+    problems of size $\tfrac{n}{2}$, and then performs queries in $O(n)$ to 
+    verify which candidate is a villager using the procedure from part (a). 
+    By the Master Theorem, with $a = 2$, $b = 2$, and $d = 1$, ${\log_b a} = 1 
+    = d$, and therefore $O(n \log n)$ is the runtime. 
 
 \end{homeworkProblem}
